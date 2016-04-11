@@ -40,21 +40,30 @@ Theta_grad = zeros(size(Theta));
 %                     partial derivatives w.r.t. to each element of Theta
 %
 
+% Non-vectorize implementation
+%[movies , users] = find(R);
+%
+%movies_users_voted_idx = [movies users]; % Matriz con los índices de todas las peliculas que fueron puntuadas por los usuarios.
+%
+%sum = 0;
+%
+%
+%for idx = 1:size(movies_users_voted_idx, 1)
+%	i = movies_users_voted_idx(idx, 1);
+%	j = movies_users_voted_idx(idx, 2);
+%	sum = sum + (X(i, :) * Theta(j, :)' - Y(i,j)) ^ 2;
+%end
+%
+% J = (1 / 2) * sum;
+
+prediction = X * Theta';
+
+J = (1 / 2) * sum(sum((R .* prediction - R .* Y) .^ 2), 2) ... 
+	+ (lambda / 2) * sum(sum(Theta .^ 2), 2) + (lambda / 2) * sum(sum(X .^ 2), 2);
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+X_grad = (R .* prediction - R .* Y) * Theta + lambda * X;
+Theta_grad = (R .* prediction - R .* Y)' * X + lambda * Theta;
 % =============================================================
 
 grad = [X_grad(:); Theta_grad(:)];
